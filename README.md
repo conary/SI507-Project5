@@ -96,3 +96,10 @@ See below for further instructions.
 * **Step 5 (100 points):** *Make sure you have a working virtual environment for this project.* You should include a `requirements.txt` file in your repository with the requirements for whatever virtual environment you use for this project. Perhaps it will require very little, perhaps you'll choose to use a complex client library and it will require a lot! **Points here will be allocated based upon whether you have included a reasonable `requirements.txt` file. You should *not* commit your virtual environment itself.** HINT: It will probably be useful to commit a `.gitignore` file in order to avoid committing all the files that are part of your virtual environment!
 
   **Checkpoint #5:** A completed `requirements.txt`
+
+
+  Authorization_base_URL
+
+  (Manually build login flow in Facebook API doc)
+
+  Get Token URL from the Facebook API reference

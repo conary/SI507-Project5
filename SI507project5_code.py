@@ -1,4 +1,10 @@
 ## import statements
+import requests_oauthlib
+import webbrowser
+import json
+import secret_data # need properly formatted file, see example
+import pytumblr
+from datetime import datetime
 
 ##### CACHING SETUP #####
 #--------------------------------------------------
@@ -106,9 +112,9 @@ CLIENT_KEY = secret_data.client_key # what Twitter calls Consumer Key
 CLIENT_SECRET = secret_data.client_secret # What Twitter calls Consumer Secret
 
 ### Specific to API URLs, not private 
-REQUEST_TOKEN_URL ="https://api.twitter.com/oauth/request_token" 
-BASE_AUTH_URL = "https://api.twitter.com/oauth/authorize" 
-ACCESS_TOKEN_URL = "https://api.twitter.com/oauth/access_token"
+REQUEST_TOKEN_URL ="https://www.tumblr.com/oauth/request_token" 
+BASE_AUTH_URL = "https://www.tumblr.com/oauth/authorize" 
+ACCESS_TOKEN_URL = "https://www.tumblr.com/oauth/access_token"
 
 
 def get_tokens(client_key=CLIENT_KEY, client_secret=CLIENT_SECRET,request_token_url=REQUEST_TOKEN_URL,base_authorization_url=BASE_AUTH_URL,access_token_url=ACCESS_TOKEN_URL,verifier_auto=True):
@@ -160,7 +166,7 @@ def get_tokens_from_service(service_name_ident, expire_in_days=7): # Default: 7 
 
 def create_request_identifier(url, params_diction):
     sorted_params = sorted(params_diction.items(),key=lambda x:x[0])
-    params_str = "_".join([str(e) for l in sorted_params for e in l]) # Make the list of tuples into a flat list using a complex list comprehension
+    params_str = "=".join([str(e) for l in sorted_params for e in l]) # Make the list of tuples into a flat list using a complex list comprehension
     total_ident = url + "?" + params_str
     return total_ident.upper() # Creating the identifier
 
@@ -171,6 +177,7 @@ def get_data_from_api(request_url,service_ident, params_diction, expire_in_days=
     if data:
         if DEBUG:
             print("Loading from data cache: {}... data".format(ident))
+            #print("Loading from data cache: {}... data".format(request_url))
     else:
         if DEBUG:
             print("Fetching new data from {}".format(request_url))
@@ -200,14 +207,35 @@ if __name__ == "__main__":
         print("You need to fill in this API's specific OAuth2 URLs in this file.")
         exit()
 
+   
+
+    #blog_url_template = 'https://api.tumblr.com/v2/blog/{0}/following'
+    blog_url_template = 'https://api.tumblr.com/v2/tagged'
+    blog_url = blog_url_template.format('conary.tumblr.com')
+
+    
+
     # Invoke functions
-    twitter_search_baseurl = "https://api.twitter.com/1.1/search/tweets.json"
-    twitter_search_params = {'q':
-    "Python programming", "count":4}
+    #twitter_search_baseurl = "https://api.tumblr.com/v2/user"
+    twitter_search_params = {"tag":"gif","tag":"puppy","limit":"1"}
 
-    twitter_result = get_data_from_api(twitter_search_baseurl,"Twitter",twitter_search_params) # Default expire_in_days
+    twitter_result = get_data_from_api(blog_url,"Tumblr",twitter_search_params) # Default expire_in_days
     print(type(twitter_result))
+    print(twitter_result)
+    print(twitter_result["response"][0]['tags'])
+    list=[]
+    for tag in twitter_result["response"][0][:1]:
+        print(tag)
 
+    #for res2 in twitter_result["response"][:1]
+    #    print(res2)
+
+
+
+
+
+
+    
 
 
 ## Make sure to run your code and write CSV files by the end of the program.
