@@ -201,6 +201,7 @@ def createCSV_1(file_name, tumblr_result):
     with open(file_name, 'w', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(['Summary','Blog Name','Tags', 'Date'])
+        blog_names = []
         for post in tumblr_result['response']:
             #description_clean = obj.description.strip()
             #description_final = description_clean.replace('\n', '/')
@@ -218,30 +219,23 @@ def createCSV_1(file_name, tumblr_result):
             if post['summary'] == '':
                 post['summary'] = 'No Summary'
             writer.writerow([post['summary'], post['blog_name'], new_tag_str, post['date']])
+            blog_names.append(post['blog_name'])
+        return blog_names
             
 
 
-def createCSV_2(file_name, tumblr_result):
+def createCSV_2(file_name, blogger_list):
     with open(file_name, 'w', newline='') as f:
         writer = csv.writer(f)
-        writer.writerow(['Summary','Blog Name','Tags', 'Date'])
-        for post in tumblr_result['response']:
+        writer.writerow(['Title','description','Number of Posts'])
+        for blogger in blogger_list:
+            blog = blogger['response']['blog']
+
             #description_clean = obj.description.strip()
             #description_final = description_clean.replace('\n', '/')
-            temp_tag_str = ''
-            new_tag_str = ''
-            i=0
-            
-            for tag in post['tags']:
-                if i == 0:
-                    new_tag_str = tag
-                else:
-                    temp_tag_str = new_tag_str
-                    new_tag_str = temp_tag_str + ', ' + tag
-                i = i+1
-            if post['summary'] == '':
-                post['summary'] = 'No Summary'
-            writer.writerow([post['summary'], post['blog_name'], new_tag_str, post['date']])
+            if blog['description'] == '':
+                blog['description'] = 'No description'
+            writer.writerow([blog['title'], blog['description'], blog['posts']])
 
 
 
@@ -266,17 +260,61 @@ if __name__ == "__main__":
 
     # Invoke functions
     #tumblr_search_baseurl = "https://api.tumblr.com/v2/user"
-    tumblr_search_params = {"tag":"puppies","limit":"10"}
+    tumblr_search_params = {"tag":"meditation","limit":"10"}
 
     tumblr_result = get_data_from_api(blog_url,"Tumblr",tumblr_search_params) # Default expire_in_days
-    createCSV_1("posts.csv", tumblr_result)
-    # createCSV_2("bloggers.csv", bloggers)
-    #print(type(tumblr_result))
+    print(type(tumblr_result))
     #print(json.dumps(tumblr_result))
-    #print(tumblr_result["response"][0]['tags'])
-    tag_list=[]
-    summary_list=[]
-    date_list=[]
+
+    blog_names = createCSV_1("posts.csv", tumblr_result)
+
+
+    blogger_list = []
+    for blogger in blog_names:
+
+
+
+        blog_url_template = 'https://api.tumblr.com/v2/blog/{0}/info'
+        blog_url = blog_url_template.format(blogger + '.tumblr.com')
+        print("blog_url" + blog_url)
+
+        tumblr_search_params = {"0":"0","0":"0"}
+
+        tumblr_result = get_data_from_api(blog_url,"Tumblr",tumblr_search_params) # Default expire_in_days
+
+        #print("blog info: " + json.dumps(tumblr_result))
+        blogger_list.append(tumblr_result)
+        #createCSV_2("bloggers.csv", blog_names)
+        #print(type(tumblr_result))
+        #print(json.dumps(tumblr_result))
+        #print(tumblr_result["response"][0]['tags'])
+
+    #print(type(blogger_list))
+    #print(json.dumps(blogger_list))
+    createCSV_2("bloggers.csv", blogger_list)
+
+    # for post in tumblr_result['response']:
+    #         #description_clean = obj.description.strip()
+    #         #description_final = description_clean.replace('\n', '/')
+    #         temp_tag_str = ''
+    #         new_tag_str = ''
+    #         i=0
+            
+    #         for tag in post['tags']:
+    #             if i == 0:
+    #                 new_tag_str = tag
+    #             else:
+    #                 temp_tag_str = new_tag_str
+    #                 new_tag_str = temp_tag_str + ', ' + tag
+    #             i = i+1
+    #         if post['summary'] == '':
+    #             post['summary'] = 'No Summary'
+    #         writer.writerow([post['summary'], post['blog_name'], new_tag_str, post['date']])
+
+
+
+
+
 
     # for post in tumblr_result['response']:
     #     #print(post['title'])
