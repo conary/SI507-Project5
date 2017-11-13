@@ -3,7 +3,6 @@ import requests_oauthlib
 import webbrowser
 import json
 import secret_data # need properly formatted file, see example
-#import pytumblr
 import csv
 from datetime import datetime
 
@@ -203,12 +202,9 @@ def createCSV_1(file_name, tumblr_result):
         writer.writerow(['Summary','Blog Name','Tags', 'Date'])
         blog_names = []
         for post in tumblr_result['response']:
-            #description_clean = obj.description.strip()
-            #description_final = description_clean.replace('\n', '/')
             temp_tag_str = ''
             new_tag_str = ''
             i=0
-            
             for tag in post['tags']:
                 if i == 0:
                     new_tag_str = tag
@@ -222,27 +218,17 @@ def createCSV_1(file_name, tumblr_result):
             blog_names.append(post['blog_name'])
         return blog_names
             
-
-
 def createCSV_2(file_name, blogger_list):
     with open(file_name, 'w', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(['Title','Description','Number of Posts'])
         for blogger in blogger_list:
             blog = blogger['response']['blog']
-
-            #description_clean = obj.description.strip()
-            #description_final = description_clean.replace('\n', '/')
             if blog['description'] == '':
                 blog['description'] = 'No description'
             if blog['title'] == '':
                 blog['title'] = 'No Title'
             writer.writerow([blog['title'], blog['description'], blog['posts']])
-
-
-
-
-
 
 if __name__ == "__main__":
     if not CLIENT_KEY or not CLIENT_SECRET:
@@ -252,106 +238,21 @@ if __name__ == "__main__":
         print("You need to fill in this API's specific OAuth2 URLs in this file.")
         exit()
 
-   
-
-    #blog_url_template = 'https://api.tumblr.com/v2/blog/{0}/following'
     blog_url_template = 'https://api.tumblr.com/v2/tagged'
     blog_url = blog_url_template.format('conary.tumblr.com')
 
-    
-
     # Invoke functions
-    #tumblr_search_baseurl = "https://api.tumblr.com/v2/user"
     tumblr_search_params = {"tag":"meditation","limit":"10"}
-
     tumblr_result = get_data_from_api(blog_url,"Tumblr",tumblr_search_params) # Default expire_in_days
-    print(type(tumblr_result))
-    #print(json.dumps(tumblr_result))
-
     blog_names = createCSV_1("posts.csv", tumblr_result)
-
-
     blogger_list = []
     for blogger in blog_names:
-
-
-
         blog_url_template = 'https://api.tumblr.com/v2/blog/{0}/info'
         blog_url = blog_url_template.format(blogger + '.tumblr.com')
         print("blog_url" + blog_url)
-
         tumblr_search_params = {"0":"0","0":"0"}
-
         tumblr_result = get_data_from_api(blog_url,"Tumblr",tumblr_search_params) # Default expire_in_days
-
-        #print("blog info: " + json.dumps(tumblr_result))
         blogger_list.append(tumblr_result)
-        #createCSV_2("bloggers.csv", blog_names)
-        #print(type(tumblr_result))
-        #print(json.dumps(tumblr_result))
-        #print(tumblr_result["response"][0]['tags'])
-
-    #print(type(blogger_list))
-    #print(json.dumps(blogger_list))
     createCSV_2("bloggers.csv", blogger_list)
-
-    # for post in tumblr_result['response']:
-    #         #description_clean = obj.description.strip()
-    #         #description_final = description_clean.replace('\n', '/')
-    #         temp_tag_str = ''
-    #         new_tag_str = ''
-    #         i=0
-            
-    #         for tag in post['tags']:
-    #             if i == 0:
-    #                 new_tag_str = tag
-    #             else:
-    #                 temp_tag_str = new_tag_str
-    #                 new_tag_str = temp_tag_str + ', ' + tag
-    #             i = i+1
-    #         if post['summary'] == '':
-    #             post['summary'] = 'No Summary'
-    #         writer.writerow([post['summary'], post['blog_name'], new_tag_str, post['date']])
-
-
-
-
-
-
-    # for post in tumblr_result['response']:
-    #     #print(post['title'])
-    #     #print(post['tags'])
-    #     #print(post['summary'])
-    #     #print(post['date'])
-    #     # if post['liked'] == True:
-    #     #     print("This post was liked")
-    #     # else:
-    #     #     print('This post was not liked :(')
-    #     result
-    #     tag_list.append(post['tags'])
-    #     summary_list.append(post['summary'])
-    #     date_list.append(post['date'])
-
-    # print(tag_list)
-    # print(summary_list)
-    # print(date_list)
-
-
-
-
-    #print(tumblr_result["response"][1]["blog_name"])
-
-
-    #for res2 in tumblr_result["response"][:1]
-    #    print(res2)
-    #asdf
-
-
-
-
-
-
-    
-
 
 ## Make sure to run your code and write CSV files by the end of the program.
