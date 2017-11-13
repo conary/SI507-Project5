@@ -1,1 +1,11 @@
 Put your Project 5 brief explanation, as directed, here.
+
+I am accessing the Tumblr search API and gathering:
+
+* 10 blog posts that are tagged with "meditation" 
+* For each of the 10 blog posts, I will access summary, blog name, tags and date
+* For each of the 10 blog posts I will access the users
+* For each of the users, I will access the blog's title, description and number of posts
+* I'll write one CSV file for the blog posts and one CSV file for the users
+* URL for the API: <api.tumblr.com>
+* URL describing the authentication process for the API: <https://www.tumblr.com/docs/en/api/v2#auth>

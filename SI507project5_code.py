@@ -227,7 +227,7 @@ def createCSV_1(file_name, tumblr_result):
 def createCSV_2(file_name, blogger_list):
     with open(file_name, 'w', newline='') as f:
         writer = csv.writer(f)
-        writer.writerow(['Title','description','Number of Posts'])
+        writer.writerow(['Title','Description','Number of Posts'])
         for blogger in blogger_list:
             blog = blogger['response']['blog']
 
@@ -235,6 +235,8 @@ def createCSV_2(file_name, blogger_list):
             #description_final = description_clean.replace('\n', '/')
             if blog['description'] == '':
                 blog['description'] = 'No description'
+            if blog['title'] == '':
+                blog['title'] = 'No Title'
             writer.writerow([blog['title'], blog['description'], blog['posts']])
 
 

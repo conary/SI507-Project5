@@ -73,7 +73,6 @@ class Part5(unittest.TestCase):
     def tearDown(self):
         self.fileref.close()
 
-
 class Part6(unittest.TestCase):
     def setUp(self):
         blog_url = 'https://api.tumblr.com/v2/blog/witches-ofcolor/info'
@@ -88,8 +87,6 @@ class Part6(unittest.TestCase):
 
     def tearDown(self):
         pass
-
-
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
